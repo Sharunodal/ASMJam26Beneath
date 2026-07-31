@@ -62,6 +62,7 @@ public class FishingGameController : MonoBehaviour
     float PlayerEnergy;
     bool IsFishermanActionActive;
     bool IsGameOver;
+    bool IsGameOverPlayerWon;
 
     readonly Vector3[] PlayerWorldCorners = new Vector3[4];
     readonly Vector3[] FishermanWorldCorners = new Vector3[4];
@@ -131,13 +132,13 @@ public class FishingGameController : MonoBehaviour
 
     private void Update()
     {
+        UpdateFishRotation();
         if (IsGameOver)
         {
             return;
         }
 
         UpdatePlayerBar();
-        UpdateFishRotation();
 
         // Reeling succeeds only while the input is held over the fisherman.
         bool reelInActionIsHeld =
@@ -244,10 +245,17 @@ public class FishingGameController : MonoBehaviour
         }
 
         // Match the fish yaw to the player bar's normalized position.
+
+        float yawAmount;
+        if (IsGameOverPlayerWon)
+            yawAmount = Mathf.Sin(Time.time * 10.0f) * 0.25f;
+        else
+            yawAmount = Mathf.Clamp((PlayerPosition - FishermanPosition) * 3.0f, -1.0f, 1.0f);
+
         float fishYaw = Mathf.Lerp(
             FishRotationAtLeftEnd,
             FishRotationAtRightEnd,
-            (Mathf.Clamp((PlayerPosition - FishermanPosition) * 3.0f, -1.0f, 1.0f) + 1.0f) / 2.0f);
+            (yawAmount + 1.0f) / 2.0f);
         Vector3 currentRotation = FishTransform.eulerAngles;
         FishTransform.eulerAngles = new Vector3(
             currentRotation.x,
@@ -324,6 +332,14 @@ public class FishingGameController : MonoBehaviour
 
     }
 
+    private void PlayerWinsGame()
+    {
+        camera_movement_script.game_over_player_won();
+        FishingUI.SetActive(false);
+        IsGameOver = true;
+        IsGameOverPlayerWon = true;
+    }
+
     private void UpdateFishermanAction()
     {
         if (!IsFishermanActionActive)
@@ -348,6 +364,9 @@ public class FishingGameController : MonoBehaviour
             }
             FinishFishermanAction();
             camera_movement_script.play_fish_twists_forward_animation();
+
+            if (FishermanEnergy <= 0)
+                PlayerWinsGame();
             return;
         }
 
