@@ -162,15 +162,15 @@ public class FishingGameController : MonoBehaviour
 
         if (IsFishermanActionActive)
         {
-            SetStatusText("Fight!");
+            SetStatusText("Press SPACE to pull!");
         }
         else if (IsFightingFisherman)
         {
-            SetStatusText("Keep going!");
+            SetStatusText("Hold the line!");
         }
         else
         {
-            SetStatusText("Go over the red icon!");
+            SetStatusText("Chase human with mouse button");
         }
     }
 
