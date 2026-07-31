@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class FishingGameController : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class FishingGameController : MonoBehaviour
     [SerializeField] TextMeshProUGUI StatusText;
     [SerializeField] TextMeshProUGUI EnergyText;
     [SerializeField] TextMeshProUGUI FishermanEnergyText;
+
+    [Header("Game state")]
+    [SerializeField] GameObject FishingUI;
+    [SerializeField] GameObject GameOverScreen;
 
     [Header("Fisherman actions")]
     [SerializeField] GameObject FishermanActionIcon;
@@ -51,6 +56,7 @@ public class FishingGameController : MonoBehaviour
     float FishermanEnergy;
     float PlayerEnergy;
     bool IsFishermanActionActive;
+    bool IsGameOver;
 
     readonly Vector3[] PlayerWorldCorners = new Vector3[4];
     readonly Vector3[] FishermanWorldCorners = new Vector3[4];
@@ -62,6 +68,15 @@ public class FishingGameController : MonoBehaviour
         ReelInAction = InputSystem.actions.FindAction("Player/Attack", false);
         ActionAction = InputSystem.actions.FindAction("Player/Action", false);
 
+        if (FishingUI != null)
+        {
+            FishingUI.SetActive(true);
+        }
+        if (GameOverScreen != null)
+        {
+            GameOverScreen.SetActive(false);
+        }
+
         // Start both UI elements at their current positions along the fishing bar.
         PlayerPosition = PositionFromAnchoredX(PlayerBar, 0.5f);
         FishermanPosition = PositionFromAnchoredX(FishermanIcon, 0.5f);
@@ -70,29 +85,9 @@ public class FishingGameController : MonoBehaviour
         SetPositionOnFishingBar(PlayerBar, PlayerPosition);
         SetPositionOnFishingBar(FishermanIcon, FishermanPosition);
 
-        // Find the action icon even when the child is disabled in the hierarchy.
-        if (FishermanActionIcon == null && FishermanIcon != null)
-        {
-            Transform actionIcon = FishermanIcon.Find("FishermanActionIcon");
-            if (actionIcon != null)
-            {
-                FishermanActionIcon = actionIcon.gameObject;
-            }
-        }
-
         if (FishermanActionIcon != null)
         {
             FishermanActionIcon.SetActive(false);
-        }
-
-        // Use the existing energy text when one has not been assigned in the Inspector.
-        if (EnergyText == null)
-        {
-            GameObject energyTextObject = GameObject.Find("PlayerEnergyText");
-            if (energyTextObject != null)
-            {
-                EnergyText = energyTextObject.GetComponent<TextMeshProUGUI>();
-            }
         }
 
         // Start both sides with full energy and wait before the first action.
@@ -129,6 +124,11 @@ public class FishingGameController : MonoBehaviour
 
     private void Update()
     {
+        if (IsGameOver)
+        {
+            return;
+        }
+
         UpdatePlayerBar();
         UpdateFishRotation();
 
@@ -145,6 +145,13 @@ public class FishingGameController : MonoBehaviour
         UpdatePlayerEnergy();
         UpdateFishermanEnergy();
         UpdateFishermanAction();
+
+        if (PlayerEnergy <= 0f)
+        {
+            ShowGameOver();
+            return;
+        }
+
         if (IsFishermanActionActive)
         {
             SetStatusText("Fight!");
@@ -157,6 +164,31 @@ public class FishingGameController : MonoBehaviour
         {
             SetStatusText("Go over the red icon!");
         }
+    }
+
+    private void ShowGameOver()
+    {
+        IsGameOver = true;
+
+        if (FishingUI != null)
+        {
+            FishingUI.SetActive(false);
+        }
+        if (GameOverScreen != null)
+        {
+            GameOverScreen.SetActive(true);
+        }
+
+        // Stop the rest of the game while the game over screen is visible.
+        Time.timeScale = 0f;
+    }
+
+    public void RestartGame()
+    {
+        // Restore normal time before reloading the current scene.
+        Time.timeScale = 1f;
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.name);
     }
 
     private void UpdatePlayerEnergy()
