@@ -13,7 +13,6 @@ public class camera_movement_script : MonoBehaviour
     {
         // Debug for testing? move camera continuously.
         advance_camera_position(Time.deltaTime);
-        set_fish_error_delta(Mathf.Sin(Time.time));
     }
 
     static void advance_camera_position(float meters_delta)
@@ -49,12 +48,8 @@ public class camera_movement_script : MonoBehaviour
         return q;
     }
 
-    static void set_fish_error_delta(float delta)
+    public static void set_fishing_line_rotation()
     {
-        // Rotate fish relative to main camera
-        GameObject g = GameObject.Find("player fish model");
-        g.transform.eulerAngles = new Vector3(0, delta * 45, 0);
-
         // Rotate fishing line so it looks like it's stuck towards the fisher.
         GameObject start = GameObject.Find("Fish line pivot at mouth");
         GameObject end = GameObject.Find("Fish line end in the sky");
@@ -67,7 +62,6 @@ public class camera_movement_script : MonoBehaviour
         xAxis = Vector3.Cross(yAxis, zAxis);
         xAxis.Normalize();
 
-        GameObject line = GameObject.Find("Fish line pivot at mouth");
-        line.transform.rotation = QuaternionFromMatrix(CreateMatrixFromDirections(xAxis, yAxis, zAxis));
+        start.transform.rotation = QuaternionFromMatrix(CreateMatrixFromDirections(xAxis, yAxis, zAxis));
     }
 }
