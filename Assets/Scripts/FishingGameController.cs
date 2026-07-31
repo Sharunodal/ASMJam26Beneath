@@ -240,7 +240,7 @@ public class FishingGameController : MonoBehaviour
         float fishYaw = Mathf.Lerp(
             FishRotationAtLeftEnd,
             FishRotationAtRightEnd,
-            PlayerPosition);
+            (Mathf.Clamp((PlayerPosition - FishermanPosition) * 3.0f, -1.0f, 1.0f) + 1.0f) / 2.0f);
         Vector3 currentRotation = FishTransform.eulerAngles;
         FishTransform.eulerAngles = new Vector3(
             currentRotation.x,
