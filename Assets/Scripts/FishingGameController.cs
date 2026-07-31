@@ -8,6 +8,7 @@ public class FishingGameController : MonoBehaviour
     [SerializeField] RectTransform FishermanIcon;
     [SerializeField] TextMeshProUGUI StatusText;
     [SerializeField] TextMeshProUGUI EnergyText;
+    [SerializeField] TextMeshProUGUI FishermanEnergyText;
 
     [Header("Fisherman actions")]
     [SerializeField] GameObject FishermanActionIcon;
@@ -15,6 +16,13 @@ public class FishingGameController : MonoBehaviour
     [SerializeField, Min(0f)] float FishermanActionResponseTime = 1f;
     [SerializeField, Min(0)] int StartingEnergy = 100;
     [SerializeField, Min(0)] int MissedActionEnergyLoss = 50;
+
+    [Header("Player energy")]
+    [SerializeField, Min(0f)] float PlayerEnergyLossPerSecond = 5f;
+
+    [Header("Fisherman energy")]
+    [SerializeField, Min(0f)] float StartingFishermanEnergy = 100f;
+    [SerializeField, Min(0f)] float FishermanEnergyLossPerSecond = 5f;
 
     [Header("Fishing bar shape")]
     [SerializeField] Vector2 LeftEnd = new Vector2(-370f, 142f);
@@ -40,7 +48,8 @@ public class FishingGameController : MonoBehaviour
     float FishermanWaitRemaining;
     float FishermanActionTimer;
     float FishermanActionResponseTimer;
-    int PlayerEnergy;
+    float FishermanEnergy;
+    float PlayerEnergy;
     bool IsFishermanActionActive;
 
     readonly Vector3[] PlayerWorldCorners = new Vector3[4];
@@ -86,9 +95,11 @@ public class FishingGameController : MonoBehaviour
             }
         }
 
-        // Start with full energy and wait before the first fisherman action.
+        // Start both sides with full energy and wait before the first action.
         PlayerEnergy = StartingEnergy;
+        FishermanEnergy = StartingFishermanEnergy;
         UpdateEnergyText();
+        UpdateFishermanEnergyText();
         ScheduleNextFishermanAction();
     }
 
@@ -121,19 +132,56 @@ public class FishingGameController : MonoBehaviour
         UpdatePlayerBar();
         UpdateFishRotation();
 
-        // Slow the fisherman while the player bar is holding onto the icon.
-        bool wasFightingFisherman = ReelInBarOverlapsFishermanIcon();
-        UpdateFishermanIcon(wasFightingFisherman);
+        // Reeling succeeds only while the input is held over the fisherman.
+        bool reelInActionIsHeld =
+            ReelInAction != null && ReelInAction.IsPressed();
+        bool wasOverlappingFisherman = ReelInBarOverlapsFishermanIcon();
+        bool wasSuccessfullyReeling =
+            reelInActionIsHeld && wasOverlappingFisherman;
+        UpdateFishermanIcon(wasSuccessfullyReeling);
+        UpdateFishermanActionIconRotation();
 
         IsFightingFisherman = ReelInBarOverlapsFishermanIcon();
+        UpdatePlayerEnergy();
+        UpdateFishermanEnergy();
         UpdateFishermanAction();
-        if (IsFightingFisherman)
+        if (IsFishermanActionActive)
+        {
+            SetStatusText("Fight!");
+        }
+        else if (IsFightingFisherman)
         {
             SetStatusText("Keep going!");
         }
         else
         {
             SetStatusText("Go over the red icon!");
+        }
+    }
+
+    private void UpdatePlayerEnergy()
+    {
+        // Player energy drains whenever the bars are not overlapping.
+        if (!IsFightingFisherman && PlayerEnergy > 0f)
+        {
+            PlayerEnergy -= PlayerEnergyLossPerSecond * Time.deltaTime;
+            PlayerEnergy = Mathf.Max(PlayerEnergy, 0f);
+            UpdateEnergyText();
+        }
+    }
+
+    private void UpdateFishermanEnergy()
+    {
+        bool reelInActionIsHeld =
+            ReelInAction != null && ReelInAction.IsPressed();
+        bool isSuccessfullyReeling =
+            reelInActionIsHeld && IsFightingFisherman;
+
+        if (isSuccessfullyReeling && FishermanEnergy > 0f)
+        {
+            FishermanEnergy -= FishermanEnergyLossPerSecond * Time.deltaTime;
+            FishermanEnergy = Mathf.Max(FishermanEnergy, 0f);
+            UpdateFishermanEnergyText();
         }
     }
 
@@ -198,6 +246,22 @@ public class FishingGameController : MonoBehaviour
             float maximumWait = Mathf.Max(FishermanWaitTime.x, FishermanWaitTime.y);
             FishermanWaitRemaining = Random.Range(minimumWait, maximumWait);
         }
+    }
+
+    private void UpdateFishermanActionIconRotation()
+    {
+        if (FishermanActionIcon == null)
+        {
+            return;
+        }
+
+        // Rotate from -90 on the left to 90 on the right.
+        float iconRotation = Mathf.Lerp(-90f, 90f, FishermanPosition);
+        Vector3 currentRotation = FishermanActionIcon.transform.localEulerAngles;
+        FishermanActionIcon.transform.localEulerAngles = new Vector3(
+            currentRotation.x,
+            currentRotation.y,
+            iconRotation);
     }
 
     private void UpdateFishermanAction()
@@ -270,7 +334,17 @@ public class FishingGameController : MonoBehaviour
     {
         if (EnergyText != null)
         {
-            EnergyText.text = PlayerEnergy.ToString();
+            int displayedEnergy = Mathf.CeilToInt(PlayerEnergy);
+            EnergyText.text = displayedEnergy.ToString();
+        }
+    }
+
+    private void UpdateFishermanEnergyText()
+    {
+        if (FishermanEnergyText != null)
+        {
+            int displayedEnergy = Mathf.CeilToInt(FishermanEnergy);
+            FishermanEnergyText.text = displayedEnergy.ToString();
         }
     }
 
