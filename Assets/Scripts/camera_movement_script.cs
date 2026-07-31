@@ -1,10 +1,26 @@
 using UnityEngine;
+using System.Collections;
+using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class camera_movement_script : MonoBehaviour
 {
     private static float camera_max_pos = -200.0f;
     private static float pending_camera_movement = 0.0f;
     private static float fish_pitch_angle = 0.0f;
+    private static float show_game_clear_screen_timer = 0.0f;
+
+    static GameObject GetChildByName(string parent, string childName)
+    {
+        Transform transform = GameObject.Find(parent).transform;
+        for(int i = 0; i < transform.childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+            if (child.gameObject.name == childName)
+                return child.gameObject;
+        }
+        return null;
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -12,6 +28,7 @@ public class camera_movement_script : MonoBehaviour
         // Game reset
         pending_camera_movement = 0.0f;
         fish_pitch_angle = 0.0f;
+        show_game_clear_screen_timer = 0.0f;
 
         GameObject.Find("Fisherman").GetComponent<Rigidbody>().isKinematic = true;
         GameObject.Find("fishing_rod").GetComponent<Rigidbody>().isKinematic = true;
@@ -28,6 +45,9 @@ public class camera_movement_script : MonoBehaviour
         GameObject.Find("fishing_rod").GetComponent<Rigidbody>().isKinematic = false;
         GameObject.Find("Fish line").SetActive(false);
         camera_max_pos = GameObject.Find("game_camera").transform.position.z - 22.0f;
+        GetChildByName("UI", "CaughtAHumanScreen").SetActive(true);
+
+        show_game_clear_screen_timer = 5.0f;
     }
 
     // Update is called once per frame
@@ -46,6 +66,15 @@ public class camera_movement_script : MonoBehaviour
         to_move = Mathf.Min(Time.deltaTime*FishPitchMoveSpeed, Mathf.Abs(fish_pitch_angle)) * sign;
         fish_pitch_angle += to_move;
         g.transform.localRotation = Quaternion.AngleAxis(fish_pitch_angle + Mathf.Sin(Time.time * 4.0f)*5.0f, new Vector3(1, 0, 0));
+
+        if (show_game_clear_screen_timer > 0.0f)
+        {
+            show_game_clear_screen_timer -= Time.deltaTime;
+            if (show_game_clear_screen_timer <= 0.0f)
+            {
+                GetChildByName("UI", "GameClearScreen").SetActive(true);
+            }
+        }
     }
 
     static void advance_camera_position(float meters_delta)
@@ -53,15 +82,11 @@ public class camera_movement_script : MonoBehaviour
         GameObject g = GameObject.Find("game_camera");
         g.transform.position = new Vector3(0, 0, Mathf.Max(camera_max_pos, g.transform.position.z + -meters_delta));
 
-        g = GameObject.Find("player fish model");
-        g.transform.position += new Vector3(0, 0, -meters_delta);
-
-        g  = GameObject.Find("Fish line end in the sky");
-        g.transform.position += new Vector3(0, 0, -meters_delta);
+        GameObject.Find("player fish model").transform.position += new Vector3(0, 0, -meters_delta);
+        GameObject.Find("Fish line end in the sky").transform.position += new Vector3(0, 0, -meters_delta);
 
         // The Fishing boat moves the camera, but not with full weight, to give a feeling that it precedes a bit.
-        g  = GameObject.Find("boat");
-        g.transform.position += new Vector3(0, 0, -meters_delta * 0.95f);
+        GameObject.Find("boat").transform.position += new Vector3(0, 0, -meters_delta * 0.95f);
     }
 
     public static Matrix4x4 CreateMatrixFromDirections(Vector3 right, Vector3 up, Vector3 forward)

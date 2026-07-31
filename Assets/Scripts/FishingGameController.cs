@@ -166,7 +166,7 @@ public class FishingGameController : MonoBehaviour
         }
         else if (IsFightingFisherman)
         {
-            SetStatusText("Hold the line!");
+            SetStatusText("Hold the position!");
         }
         else
         {
