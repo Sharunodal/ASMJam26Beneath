@@ -2,17 +2,42 @@ using UnityEngine;
 
 public class camera_movement_script : MonoBehaviour
 {
+    private static float pending_camera_movement = 0.0f;
+    private static float fish_pitch_angle = 0.0f;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        // Game reset
+        pending_camera_movement = 0.0f;
+        fish_pitch_angle = 0.0f;
     }
+
+    const float CameraMoveSpeed = 10.0f;
+    const float FishPitchMoveSpeed = 40.0f;
 
     // Update is called once per frame
     void Update()
     {
-        // Debug for testing? move camera continuously.
-        advance_camera_position(Time.deltaTime);
+        float sign = pending_camera_movement < 0 ? -1.0f : 1.0f;
+        float to_move = Mathf.Min(Time.deltaTime*CameraMoveSpeed, Mathf.Abs(pending_camera_movement)) * sign;
+        // Keep a very small constant movement to make the game view look more interesting.
+        float constant_camera_movement = Time.deltaTime * 1.0f;
+        advance_camera_position(to_move + constant_camera_movement);
+        pending_camera_movement -= to_move;
+
+        GameObject g = GameObject.Find("fish pitch up/down");
+        if (fish_pitch_angle == 0.0f)
+        {
+            g.transform.localRotation = Quaternion.AngleAxis(Mathf.Sin(Time.time * 4.0f)*5.0f, new Vector3(1, 0, 0));            
+        }
+        else
+        {
+            sign = fish_pitch_angle < 0 ? 1.0f : -1.0f;
+            to_move = Mathf.Min(Time.deltaTime*FishPitchMoveSpeed, Mathf.Abs(fish_pitch_angle)) * sign;
+            fish_pitch_angle += to_move;
+            g.transform.localRotation = Quaternion.AngleAxis(fish_pitch_angle, new Vector3(1, 0, 0));
+        }
     }
 
     static void advance_camera_position(float meters_delta)
@@ -46,6 +71,12 @@ public class camera_movement_script : MonoBehaviour
         q.y *= Mathf.Sign(q.y * (m[0,2] - m[2,0]));
         q.z *= Mathf.Sign(q.z * (m[1,0] - m[0,1]));
         return q;
+    }
+
+    public static void play_fish_twists_back_animation()
+    {
+        camera_movement_script.pending_camera_movement += -6.0f;
+        fish_pitch_angle += 25.0f;
     }
 
     public static void set_fishing_line_rotation()

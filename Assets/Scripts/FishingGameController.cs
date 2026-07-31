@@ -296,6 +296,12 @@ public class FishingGameController : MonoBehaviour
             iconRotation);
     }
 
+    private void PlayFishTwistsBackAnimation()
+    {
+        GameObject start = GameObject.Find("fish pitch up/down");
+
+    }
+
     private void UpdateFishermanAction()
     {
         if (!IsFishermanActionActive)
@@ -325,6 +331,9 @@ public class FishingGameController : MonoBehaviour
             PlayerEnergy = Mathf.Max(PlayerEnergy, 0);
             UpdateEnergyText();
             FinishFishermanAction();
+
+            if (PlayerEnergy > 0) // Don't play the feedback animation if player died, since that looked jarring.
+                camera_movement_script.play_fish_twists_back_animation();
         }
     }
 
