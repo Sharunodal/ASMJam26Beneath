@@ -146,7 +146,7 @@ public class FishingGameController : MonoBehaviour
         bool wasSuccessfullyReeling =
             reelInActionIsHeld && wasOverlappingFisherman;
         UpdateFishermanIcon(wasSuccessfullyReeling);
-        UpdateFishermanActionIconRotation();
+        UpdateFishingBarElementRotations();
 
         IsFightingFisherman = ReelInBarOverlapsFishermanIcon();
         UpdatePlayerEnergy();
@@ -287,20 +287,35 @@ public class FishingGameController : MonoBehaviour
         }
     }
 
-    private void UpdateFishermanActionIconRotation()
+    private void UpdateFishingBarElementRotations()
     {
-        if (FishermanActionIcon == null)
+        // Rotate each moving UI element to follow the curve of the fishing bar.
+        if (PlayerBar != null)
         {
-            return;
+            float playerRotation = Mathf.Lerp(-90f, 90f, PlayerPosition);
+            SetLocalZRotation(PlayerBar.transform, playerRotation);
         }
 
-        // Rotate from -90 on the left to 90 on the right.
-        float iconRotation = Mathf.Lerp(-90f, 90f, FishermanPosition);
-        Vector3 currentRotation = FishermanActionIcon.transform.localEulerAngles;
-        FishermanActionIcon.transform.localEulerAngles = new Vector3(
+        if (FishermanIcon != null)
+        {
+            float fishermanRotation = Mathf.Lerp(-90f, 90f, FishermanPosition);
+            SetLocalZRotation(FishermanIcon.transform, fishermanRotation);
+        }
+
+        // This icon is a child, so it inherits the FishermanIcon rotation.
+        if (FishermanActionIcon != null)
+        {
+            SetLocalZRotation(FishermanActionIcon.transform, 0f);
+        }
+    }
+
+    private void SetLocalZRotation(Transform element, float zRotation)
+    {
+        Vector3 currentRotation = element.localEulerAngles;
+        element.localEulerAngles = new Vector3(
             currentRotation.x,
             currentRotation.y,
-            iconRotation);
+            zRotation);
     }
 
     private void PlayFishTwistsBackAnimation()
@@ -454,16 +469,29 @@ public class FishingGameController : MonoBehaviour
         PlayerBar.GetWorldCorners(PlayerWorldCorners);
         FishermanIcon.GetWorldCorners(FishermanWorldCorners);
 
-        // Compare the world-space rectangles so canvas scaling is accounted for.
+        // Find the outer edges of both rotated rectangles.
         float playerLeft = PlayerWorldCorners[0].x;
-        float playerRight = PlayerWorldCorners[2].x;
+        float playerRight = PlayerWorldCorners[0].x;
         float playerBottom = PlayerWorldCorners[0].y;
-        float playerTop = PlayerWorldCorners[2].y;
+        float playerTop = PlayerWorldCorners[0].y;
 
         float fishermanLeft = FishermanWorldCorners[0].x;
-        float fishermanRight = FishermanWorldCorners[2].x;
+        float fishermanRight = FishermanWorldCorners[0].x;
         float fishermanBottom = FishermanWorldCorners[0].y;
-        float fishermanTop = FishermanWorldCorners[2].y;
+        float fishermanTop = FishermanWorldCorners[0].y;
+
+        for (int corner = 1; corner < 4; corner++)
+        {
+            playerLeft = Mathf.Min(playerLeft, PlayerWorldCorners[corner].x);
+            playerRight = Mathf.Max(playerRight, PlayerWorldCorners[corner].x);
+            playerBottom = Mathf.Min(playerBottom, PlayerWorldCorners[corner].y);
+            playerTop = Mathf.Max(playerTop, PlayerWorldCorners[corner].y);
+
+            fishermanLeft = Mathf.Min(fishermanLeft, FishermanWorldCorners[corner].x);
+            fishermanRight = Mathf.Max(fishermanRight, FishermanWorldCorners[corner].x);
+            fishermanBottom = Mathf.Min(fishermanBottom, FishermanWorldCorners[corner].y);
+            fishermanTop = Mathf.Max(fishermanTop, FishermanWorldCorners[corner].y);
+        }
 
         bool overlapsHorizontally =
             playerLeft <= fishermanRight && playerRight >= fishermanLeft;
