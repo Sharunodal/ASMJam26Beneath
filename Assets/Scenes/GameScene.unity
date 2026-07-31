@@ -291,6 +291,86 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.1889291
   m_Center: {x: -0.1889291, y: 0, z: 0}
+--- !u!1001 &82694076
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 799113377}
+    m_Modifications:
+    - target: {fileID: 2724317867669971928, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724317867669971928, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724317867669971928, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724317867669971928, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724317867669971928, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724317867669971928, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724317867669971928, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724317867669971928, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724317867669971928, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724317867669971928, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724317867669971928, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724317867669971928, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 142.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724317867669971928, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -95.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724317867669971928, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3843563463100809023, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      propertyPath: 'm_BlendShapeWeights.Array.data[0]'
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7633359368327038227, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      propertyPath: m_Name
+      value: fishing_rod
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7633359368327038227, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1771900193}
+  m_SourcePrefab: {fileID: 100100000, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
 --- !u!4 &181476012 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 759605549988162227, guid: e60695098a5e8164e98b5b4ea1c764ee, type: 3}
@@ -1695,6 +1775,38 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1052414338}
   m_SourcePrefab: {fileID: 100100000, guid: 00735cd7a4de4054c960c1e508755f64, type: 3}
+--- !u!1 &463150872
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 463150873}
+  m_Layer: 0
+  m_Name: fishing rod base pivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &463150873
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 463150872}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.13704228, y: 0.34421316, z: -0.7187492, w: 0.5883335}
+  m_LocalPosition: {x: 3.529434, y: 3.2, z: -4.13}
+  m_LocalScale: {x: 7, y: 7, z: 7}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 799113377}
+  m_Father: {fileID: 1153454027}
+  m_LocalEulerAnglesHint: {x: 41, y: 16, z: -95.38}
 --- !u!1001 &472008140
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3158,6 +3270,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
+--- !u!1 &799113376
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 799113377}
+  m_Layer: 0
+  m_Name: fishing_rod_twitch_rotation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &799113377
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799113376}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1771900192}
+  m_Father: {fileID: 463150873}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &799304805
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4964,6 +5108,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4282074593119426, guid: 8f2bf942bd60740d9a10ecb65f58cd67, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1685613878}
+    - targetCorrespondingSourceObject: {fileID: 4282074593119426, guid: 8f2bf942bd60740d9a10ecb65f58cd67, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 463150873}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f2bf942bd60740d9a10ecb65f58cd67, type: 3}
 --- !u!1 &1424729340
@@ -6265,6 +6412,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1771900191 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7633359368327038227, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+  m_PrefabInstance: {fileID: 82694076}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1771900192 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2724317867669971928, guid: 2d49b3350b370b249be6da86b46b921e, type: 3}
+  m_PrefabInstance: {fileID: 82694076}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1771900193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1771900191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6716be3897c787747837fcfbc51da5c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::fishing_rod_twitch
 --- !u!1001 &1774600122
 PrefabInstance:
   m_ObjectHideFlags: 0
