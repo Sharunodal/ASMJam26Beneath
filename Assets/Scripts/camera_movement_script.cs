@@ -45,6 +45,10 @@ public class camera_movement_script : MonoBehaviour
 
         g  = GameObject.Find("Fish line end in the sky");
         g.transform.position += new Vector3(0, 0, -meters_delta);
+
+        // The Fishing boat moves the camera, but not with full weight, to give a feeling that it precedes a bit.
+        g  = GameObject.Find("boat");
+        g.transform.position += new Vector3(0, 0, -meters_delta * 0.9f);
     }
 
     public static Matrix4x4 CreateMatrixFromDirections(Vector3 right, Vector3 up, Vector3 forward)

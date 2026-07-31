@@ -2917,7 +2917,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1089026044800836, guid: 8f2bf942bd60740d9a10ecb65f58cd67, type: 3}
       propertyPath: m_Name
-      value: boat_2
+      value: boat
       objectReference: {fileID: 0}
     - target: {fileID: 4282074593119426, guid: 8f2bf942bd60740d9a10ecb65f58cd67, type: 3}
       propertyPath: m_LocalScale.x
