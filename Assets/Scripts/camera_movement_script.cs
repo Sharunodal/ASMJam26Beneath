@@ -14,7 +14,8 @@ public class camera_movement_script : MonoBehaviour
     }
 
     const float CameraMoveSpeed = 10.0f;
-    const float FishPitchMoveSpeed = 40.0f;
+    const float FishPitchBackMoveSpeed = 40.0f;
+    const float FishPitchForwardMoveSpeed = 4.0f;
 
     // Update is called once per frame
     void Update()
@@ -27,17 +28,11 @@ public class camera_movement_script : MonoBehaviour
         pending_camera_movement -= to_move;
 
         GameObject g = GameObject.Find("fish pitch up/down");
-        if (fish_pitch_angle == 0.0f)
-        {
-            g.transform.localRotation = Quaternion.AngleAxis(Mathf.Sin(Time.time * 4.0f)*5.0f, new Vector3(1, 0, 0));            
-        }
-        else
-        {
-            sign = fish_pitch_angle < 0 ? 1.0f : -1.0f;
-            to_move = Mathf.Min(Time.deltaTime*FishPitchMoveSpeed, Mathf.Abs(fish_pitch_angle)) * sign;
-            fish_pitch_angle += to_move;
-            g.transform.localRotation = Quaternion.AngleAxis(fish_pitch_angle, new Vector3(1, 0, 0));
-        }
+        sign = fish_pitch_angle < 0 ? 1.0f : -1.0f;
+        float FishPitchMoveSpeed = fish_pitch_angle < 0 ? FishPitchForwardMoveSpeed : FishPitchBackMoveSpeed;
+        to_move = Mathf.Min(Time.deltaTime*FishPitchMoveSpeed, Mathf.Abs(fish_pitch_angle)) * sign;
+        fish_pitch_angle += to_move;
+        g.transform.localRotation = Quaternion.AngleAxis(fish_pitch_angle + Mathf.Sin(Time.time * 4.0f)*5.0f, new Vector3(1, 0, 0));
     }
 
     static void advance_camera_position(float meters_delta)
@@ -75,8 +70,14 @@ public class camera_movement_script : MonoBehaviour
 
     public static void play_fish_twists_back_animation()
     {
-        camera_movement_script.pending_camera_movement += -6.0f;
+        camera_movement_script.pending_camera_movement -= 6.0f;
         fish_pitch_angle += 25.0f;
+    }
+
+    public static void play_fish_twists_forward_animation()
+    {
+        camera_movement_script.pending_camera_movement += 30.0f;
+        fish_pitch_angle -= 25.0f;
     }
 
     public static void set_fishing_line_rotation()

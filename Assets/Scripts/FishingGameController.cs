@@ -321,6 +321,7 @@ public class FishingGameController : MonoBehaviour
         if (actionWasPressed && IsFightingFisherman)
         {
             FinishFishermanAction();
+            camera_movement_script.play_fish_twists_forward_animation();
             return;
         }
 
