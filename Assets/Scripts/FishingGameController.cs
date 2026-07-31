@@ -11,6 +11,10 @@ public class FishingGameController : MonoBehaviour
     [SerializeField] TextMeshProUGUI EnergyText;
     [SerializeField] TextMeshProUGUI FishermanEnergyText;
 
+    [Header("Sound effects")]
+    [SerializeField] AudioClip SuccessfulActionSound;
+    [SerializeField] AudioClip FailedActionSound;
+
     [Header("Game state")]
     [SerializeField] GameObject FishingUI;
     [SerializeField] GameObject GameOverScreen;
@@ -47,6 +51,7 @@ public class FishingGameController : MonoBehaviour
 
     private InputAction ActionAction;
     private InputAction ReelInAction;
+    private AudioSource SoundEffectAudioSource;
     float PlayerPosition;
     float FishermanPosition;
     float FishermanTargetPosition;
@@ -67,6 +72,8 @@ public class FishingGameController : MonoBehaviour
     {
         ReelInAction = InputSystem.actions.FindAction("Player/Attack", false);
         ActionAction = InputSystem.actions.FindAction("Player/Action", false);
+
+        SoundEffectAudioSource = GetComponent<AudioSource>();
 
         if (FishingUI != null)
         {
@@ -320,6 +327,10 @@ public class FishingGameController : MonoBehaviour
             ActionAction != null && ActionAction.WasPressedThisFrame();
         if (actionWasPressed && IsFightingFisherman)
         {
+            if (SuccessfulActionSound != null)
+            {
+                SoundEffectAudioSource.PlayOneShot(SuccessfulActionSound);
+            }
             FinishFishermanAction();
             camera_movement_script.play_fish_twists_forward_animation();
             return;
@@ -328,6 +339,10 @@ public class FishingGameController : MonoBehaviour
         FishermanActionResponseTimer -= Time.deltaTime;
         if (FishermanActionResponseTimer <= 0f)
         {
+            if (FailedActionSound != null)
+            {
+                SoundEffectAudioSource.PlayOneShot(FailedActionSound);
+            }
             PlayerEnergy -= MissedActionEnergyLoss;
             PlayerEnergy = Mathf.Max(PlayerEnergy, 0);
             UpdateEnergyText();
