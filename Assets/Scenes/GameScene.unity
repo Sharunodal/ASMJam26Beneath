@@ -857,7 +857,7 @@ MonoBehaviour:
   StartingEnergy: 100
   MissedActionEnergyLoss: 50
   PlayerEnergyLossPerSecond: 5
-  StartingFishermanEnergy: 0
+  StartingFishermanEnergy: 100
   FishermanEnergyLossPerSecond: 8
   LeftEnd: {x: -370, y: 144}
   Middle: {x: 0, y: -145}
