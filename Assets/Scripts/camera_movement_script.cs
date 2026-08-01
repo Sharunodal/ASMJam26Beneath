@@ -49,7 +49,10 @@ public class camera_movement_script : MonoBehaviour
         f.transform.SetParent(null);
         f.GetComponent<Animator>().enabled = false;
         f.GetComponent<Rigidbody>().isKinematic = false;
-        f.GetComponent<Rigidbody>().AddForce(new Vector3(200.0f,150.0f,-550.0f), ForceMode.Impulse);
+        Vector3 force = new Vector3(5.0f,15.0f,-20.0f);
+        f.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+        foreach(Rigidbody b in f.GetComponentsInChildren<Rigidbody>())
+            b.AddForce(force, ForceMode.Impulse);
 
         GameObject.Find("fishing_rod").GetComponent<Rigidbody>().isKinematic = false;
         GameObject.Find("Fish line").SetActive(false);
@@ -106,6 +109,16 @@ public class camera_movement_script : MonoBehaviour
                 GetChildByName("UI", "GameOverScreen").SetActive(true);
             }
         }
+
+        GameObject f = GameObject.Find("Fisherman");
+        Vector3 force = new Vector3(0.0f,Time.deltaTime*25.0f,0.0f);
+        foreach(Rigidbody b in f.GetComponentsInChildren<Rigidbody>())
+            if (b.gameObject.transform.position.y < 10.57f)
+            {
+                float depth = 10.57f - b.gameObject.transform.position.y;
+                float forceStrength = Mathf.Min(depth, 5.0f) / 5.0f;
+                b.AddForce(force*forceStrength, ForceMode.Impulse);
+            }
     }
 
     static void advance_camera_position(float meters_delta)
