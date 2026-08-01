@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class camera_movement_script : MonoBehaviour
 {
@@ -68,6 +70,10 @@ public class camera_movement_script : MonoBehaviour
         show_game_lost_screen_timer = 5.0f;
         GameObject.Find("FishingUI").SetActive(false);
         GetChildByName("UI", "GotFishedScreen").SetActive(true);
+        Volume v = GameObject.Find("Global Volume").GetComponent<Volume>();
+        ColorAdjustments ca = null;
+        v.profile.TryGet(out ca);
+        ca.saturation.value = -100;
         ((fishing_rod_twitch)GameObject.Find("fishing_rod").GetComponent(typeof(fishing_rod_twitch))).game_lost();
         stop_movement_after_distance = 22.0f;
     }
