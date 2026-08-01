@@ -62,6 +62,8 @@ public class camera_movement_script : MonoBehaviour
         GetChildByName("UI", "CaughtAHumanScreen").SetActive(true);
 
         show_game_clear_screen_timer = 5.0f;
+
+        GameObject.Find("Music").GetComponent<AudioSource>().Stop();
     }
 
     public static void game_over_player_lost()
@@ -77,6 +79,8 @@ public class camera_movement_script : MonoBehaviour
         ca.saturation.value = -100;
         ((fishing_rod_twitch)GameObject.Find("fishing_rod").GetComponent(typeof(fishing_rod_twitch))).game_lost();
         stop_movement_after_distance = 22.0f;
+
+        GameObject.Find("Music").GetComponent<AudioSource>().Stop();
     }
 
     // Update is called once per frame

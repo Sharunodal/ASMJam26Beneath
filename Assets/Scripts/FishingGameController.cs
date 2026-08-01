@@ -98,7 +98,9 @@ public class FishingGameController : MonoBehaviour
 
         // Restore the fish that the player selected previously.
         int savedFishIndex = PlayerPrefs.GetInt("SelectedFish", 0);
+        gameStartup = true;
         SelectFish(savedFishIndex);
+        gameStartup = false;
 
         ShowMainMenu();
     }
@@ -213,6 +215,8 @@ public class FishingGameController : MonoBehaviour
         SetScreenActive(FishingUI, true);
     }
 
+    bool gameStartup = false;
+
     public void SelectFish(int selectedIndex)
     {
         if (FishOptions == null || FishOptions.Length == 0)
@@ -233,6 +237,11 @@ public class FishingGameController : MonoBehaviour
                 bool shouldBeActive = fishIndex == selectedIndex;
                 FishOptions[fishIndex].SetActive(shouldBeActive);
             }
+        }
+
+        if (!gameStartup)
+        {
+            GameObject.Find("Music").GetComponent<AudioSource>().Play();
         }
 
         PlayerPrefs.SetInt("SelectedFish", selectedIndex);
