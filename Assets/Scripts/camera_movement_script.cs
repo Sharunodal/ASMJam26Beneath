@@ -71,6 +71,7 @@ public class camera_movement_script : MonoBehaviour
         GameObject.Find("FishingUI").SetActive(false);
         GetChildByName("UI", "GotFishedScreen").SetActive(true);
         Volume v = GameObject.Find("Global Volume").GetComponent<Volume>();
+        GameObject.Find("GameOverSound").GetComponent<AudioSource>().Play();
         ColorAdjustments ca = null;
         v.profile.TryGet(out ca);
         ca.saturation.value = -100;
@@ -170,6 +171,7 @@ public class camera_movement_script : MonoBehaviour
 
     public static void play_fish_twists_forward_animation()
     {
+        GameObject.Find("SwooshSound").GetComponent<AudioSource>().Play();
         camera_movement_script.pending_camera_movement += 30.0f;
         fish_pitch_angle -= 25.0f;
     }
