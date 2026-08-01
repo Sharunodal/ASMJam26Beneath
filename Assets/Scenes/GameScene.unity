@@ -928,6 +928,8 @@ MonoBehaviour:
   MainMenuScreen: {fileID: 1788558569}
   PauseMenuScreen: {fileID: 1199998027}
   GameOverScreen: {fileID: 2092789601}
+  GameClearScreen: {fileID: 1059838340}
+  CaughtHumanScreen: {fileID: 454923637}
   FishermanActionIcon: {fileID: 321596824}
   FishermanActionInterval: {x: 10, y: 15}
   FishermanActionResponseTime: 1
@@ -8980,7 +8982,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 0.25
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0

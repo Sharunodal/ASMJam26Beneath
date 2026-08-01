@@ -21,6 +21,8 @@ public class FishingGameController : MonoBehaviour
     [SerializeField] GameObject MainMenuScreen;
     [SerializeField] GameObject PauseMenuScreen;
     [SerializeField] GameObject GameOverScreen;
+    [SerializeField] GameObject GameClearScreen;
+    [SerializeField] GameObject CaughtHumanScreen;
 
     [Header("Fisherman actions")]
     [SerializeField] GameObject FishermanActionIcon;
@@ -91,7 +93,7 @@ public class FishingGameController : MonoBehaviour
         StartingPlayerPosition = PositionFromAnchoredX(PlayerBar, 0.5f);
         StartingFishermanPosition = PositionFromAnchoredX(FishermanIcon, 0.5f);
 
-        ReturnToMainMenu();
+        ShowMainMenu();
     }
 
     private void OnEnable()
@@ -215,6 +217,8 @@ public class FishingGameController : MonoBehaviour
         SetScreenActive(MainMenuScreen, false);
         SetScreenActive(PauseMenuScreen, false);
         SetScreenActive(GameOverScreen, false);
+        SetScreenActive(GameClearScreen, false);
+        SetScreenActive(CaughtHumanScreen, false);
         SetScreenActive(FishingUI, true);
     }
 
@@ -237,7 +241,7 @@ public class FishingGameController : MonoBehaviour
         Time.timeScale = 1f;
     }
 
-    public void ReturnToMainMenu()
+    private void ShowMainMenu()
     {
         StopAllCoroutines();
         IsGameStarted = false;
@@ -247,8 +251,16 @@ public class FishingGameController : MonoBehaviour
         SetScreenActive(FishingUI, false);
         SetScreenActive(PauseMenuScreen, false);
         SetScreenActive(GameOverScreen, false);
+        SetScreenActive(GameClearScreen, false);
+        SetScreenActive(CaughtHumanScreen, false);
         SetScreenActive(MainMenuScreen, true);
         Time.timeScale = 0f;
+    }
+
+    public void ReturnToMainMenu()
+    {
+        // Reloading restores world positions, physics, animations, and UI state.
+        RestartGame();
     }
 
     private void ResetFishingGame()
