@@ -1323,7 +1323,7 @@ MonoBehaviour:
   GameClearScreen: {fileID: 1059838340}
   CaughtHumanScreen: {fileID: 454923637}
   FishermanActionIcon: {fileID: 321596824}
-  FishermanActionInterval: {x: 8, y: 14}
+  FishermanActionInterval: {x: 8, y: 12}
   FishermanActionResponseTime: 1
   StartingEnergy: 100
   MissedActionEnergyLoss: 50

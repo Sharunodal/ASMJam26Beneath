@@ -93,7 +93,7 @@ public class FishingGameController : MonoBehaviour
 
     private void Awake()
     {
-        ReelInAction = InputSystem.actions.FindAction("Player/Attack", false);
+        ReelInAction = InputSystem.actions.FindAction("Player/ReelIn", false);
         ActionAction = InputSystem.actions.FindAction("Player/Action", false);
         PauseAction = InputSystem.actions.FindAction("Player/Pause", false);
 
@@ -199,7 +199,7 @@ public class FishingGameController : MonoBehaviour
 
         if (IsFishermanActionActive)
         {
-            SetStatusText("Press SPACE to pull!");
+            SetStatusText("Right mouse button!");
         }
         else if (IsFightingFisherman)
         {
@@ -207,7 +207,7 @@ public class FishingGameController : MonoBehaviour
         }
         else
         {
-            SetStatusText("Chase human with mouse button");
+            SetStatusText("Left mouse button!");
         }
     }
 
