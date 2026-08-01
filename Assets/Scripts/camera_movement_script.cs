@@ -30,6 +30,7 @@ public class camera_movement_script : MonoBehaviour
     void Start()
     {
         // Game reset
+        camera_max_pos = -200.0f;
         pending_camera_movement = 0.0f;
         fish_pitch_angle = 0.0f;
         show_game_clear_screen_timer = 0.0f;
