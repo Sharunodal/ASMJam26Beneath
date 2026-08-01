@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,6 +18,8 @@ public class FishingGameController : MonoBehaviour
 
     [Header("Game state")]
     [SerializeField] GameObject FishingUI;
+    [SerializeField] GameObject MainMenuScreen;
+    [SerializeField] GameObject PauseMenuScreen;
     [SerializeField] GameObject GameOverScreen;
 
     [Header("Fisherman actions")]
@@ -32,6 +35,8 @@ public class FishingGameController : MonoBehaviour
     [Header("Fisherman energy")]
     [SerializeField, Min(0f)] float StartingFishermanEnergy = 100f;
     [SerializeField, Min(0f)] float FishermanEnergyLossPerSecond = 5f;
+    [SerializeField, Min(0f)] float SuccessfulActionEnergyDamage = 20f;
+    [SerializeField, Min(0f)] float SuccessfulActionDamageDuration = 2f;
 
     [Header("Fishing bar shape")]
     [SerializeField] Vector2 LeftEnd = new Vector2(-370f, 142f);
@@ -51,9 +56,12 @@ public class FishingGameController : MonoBehaviour
 
     private InputAction ActionAction;
     private InputAction ReelInAction;
+    private InputAction PauseAction;
     private AudioSource SoundEffectAudioSource;
     float PlayerPosition;
+    float StartingPlayerPosition;
     float FishermanPosition;
+    float StartingFishermanPosition;
     float FishermanTargetPosition;
     float FishermanWaitRemaining;
     float FishermanActionTimer;
@@ -61,6 +69,8 @@ public class FishingGameController : MonoBehaviour
     float FishermanEnergy;
     float PlayerEnergy;
     bool IsFishermanActionActive;
+    bool IsGameStarted;
+    bool IsPaused;
     bool IsGameOver;
     bool IsGameOverPlayerWon;
 
@@ -73,37 +83,15 @@ public class FishingGameController : MonoBehaviour
     {
         ReelInAction = InputSystem.actions.FindAction("Player/Attack", false);
         ActionAction = InputSystem.actions.FindAction("Player/Action", false);
+        PauseAction = InputSystem.actions.FindAction("Player/Pause", false);
 
         SoundEffectAudioSource = GetComponent<AudioSource>();
 
-        if (FishingUI != null)
-        {
-            FishingUI.SetActive(true);
-        }
-        if (GameOverScreen != null)
-        {
-            GameOverScreen.SetActive(false);
-        }
-
         // Start both UI elements at their current positions along the fishing bar.
-        PlayerPosition = PositionFromAnchoredX(PlayerBar, 0.5f);
-        FishermanPosition = PositionFromAnchoredX(FishermanIcon, 0.5f);
-        FishermanTargetPosition = Random.value;
+        StartingPlayerPosition = PositionFromAnchoredX(PlayerBar, 0.5f);
+        StartingFishermanPosition = PositionFromAnchoredX(FishermanIcon, 0.5f);
 
-        SetPositionOnFishingBar(PlayerBar, PlayerPosition);
-        SetPositionOnFishingBar(FishermanIcon, FishermanPosition);
-
-        if (FishermanActionIcon != null)
-        {
-            FishermanActionIcon.SetActive(false);
-        }
-
-        // Start both sides with full energy and wait before the first action.
-        PlayerEnergy = StartingEnergy;
-        FishermanEnergy = StartingFishermanEnergy;
-        UpdateEnergyText();
-        UpdateFishermanEnergyText();
-        ScheduleNextFishermanAction();
+        ReturnToMainMenu();
     }
 
     private void OnEnable()
@@ -115,6 +103,10 @@ public class FishingGameController : MonoBehaviour
         if (ActionAction != null)
         {
             ActionAction.Enable();
+        }
+        if (PauseAction != null)
+        {
+            PauseAction.Enable();
         }
     }
 
@@ -128,15 +120,37 @@ public class FishingGameController : MonoBehaviour
         {
             ActionAction.Disable();
         }
+        if (PauseAction != null)
+        {
+            PauseAction.Disable();
+        }
     }
 
     private void Update()
     {
-        UpdateFishRotation();
-        if (IsGameOver)
+        if (!IsGameStarted || IsGameOver)
         {
             return;
         }
+
+        if (PauseAction != null && PauseAction.WasPressedThisFrame())
+        {
+            if (IsPaused)
+            {
+                ResumeGame();
+            }
+            else
+            {
+                PauseGame();
+            }
+        }
+
+        if (IsPaused)
+        {
+            return;
+        }
+
+        UpdateFishRotation();
 
         UpdatePlayerBar();
 
@@ -177,6 +191,7 @@ public class FishingGameController : MonoBehaviour
     private void ShowGameOver()
     {
         IsGameOver = true;
+        IsPaused = false;
 
         if (FishingUI != null)
         {
@@ -189,6 +204,85 @@ public class FishingGameController : MonoBehaviour
 
         // Stop the rest of the game while the game over screen is visible.
         Time.timeScale = 0f;
+    }
+
+    public void StartGame()
+    {
+        ResetFishingGame();
+        IsGameStarted = true;
+        Time.timeScale = 1f;
+
+        SetScreenActive(MainMenuScreen, false);
+        SetScreenActive(PauseMenuScreen, false);
+        SetScreenActive(GameOverScreen, false);
+        SetScreenActive(FishingUI, true);
+    }
+
+    private void PauseGame()
+    {
+        IsPaused = true;
+        SetScreenActive(PauseMenuScreen, true);
+        Time.timeScale = 0f;
+    }
+
+    public void ResumeGame()
+    {
+        if (!IsGameStarted || IsGameOver)
+        {
+            return;
+        }
+
+        IsPaused = false;
+        SetScreenActive(PauseMenuScreen, false);
+        Time.timeScale = 1f;
+    }
+
+    public void ReturnToMainMenu()
+    {
+        StopAllCoroutines();
+        IsGameStarted = false;
+        IsPaused = false;
+        IsGameOver = false;
+
+        SetScreenActive(FishingUI, false);
+        SetScreenActive(PauseMenuScreen, false);
+        SetScreenActive(GameOverScreen, false);
+        SetScreenActive(MainMenuScreen, true);
+        Time.timeScale = 0f;
+    }
+
+    private void ResetFishingGame()
+    {
+        StopAllCoroutines();
+        IsGameOver = false;
+        IsGameOverPlayerWon = false;
+        IsPaused = false;
+        IsFightingFisherman = false;
+        IsFishermanActionActive = false;
+
+        PlayerPosition = StartingPlayerPosition;
+        FishermanPosition = StartingFishermanPosition;
+        FishermanTargetPosition = Random.value;
+        FishermanWaitRemaining = 0f;
+        FishermanActionResponseTimer = 0f;
+
+        PlayerEnergy = StartingEnergy;
+        FishermanEnergy = StartingFishermanEnergy;
+        UpdateEnergyText();
+        UpdateFishermanEnergyText();
+
+        SetPositionOnFishingBar(PlayerBar, PlayerPosition);
+        SetPositionOnFishingBar(FishermanIcon, FishermanPosition);
+        UpdateFishingBarElementRotations();
+        FinishFishermanAction();
+    }
+
+    private void SetScreenActive(GameObject screen, bool shouldBeActive)
+    {
+        if (screen != null)
+        {
+            screen.SetActive(shouldBeActive);
+        }
     }
 
     public void RestartGame()
@@ -222,6 +316,39 @@ public class FishingGameController : MonoBehaviour
             FishermanEnergy -= FishermanEnergyLossPerSecond * Time.deltaTime;
             FishermanEnergy = Mathf.Max(FishermanEnergy, 0f);
             UpdateFishermanEnergyText();
+        }
+    }
+
+    private IEnumerator DrainFishermanEnergyAfterSuccessfulAction()
+    {
+        // Apply the action damage gradually while regular reeling can still drain energy.
+        if (SuccessfulActionDamageDuration <= 0f)
+        {
+            FishermanEnergy -= SuccessfulActionEnergyDamage;
+            FishermanEnergy = Mathf.Max(FishermanEnergy, 0f);
+            UpdateFishermanEnergyText();
+            yield break;
+        }
+
+        float drainedEnergy = 0f;
+        float energyDamagePerSecond =
+            SuccessfulActionEnergyDamage / SuccessfulActionDamageDuration;
+
+        while (drainedEnergy < SuccessfulActionEnergyDamage && FishermanEnergy > 0f)
+        {
+            float energyDamageThisFrame = energyDamagePerSecond * Time.deltaTime;
+            float remainingEnergyDamage =
+                SuccessfulActionEnergyDamage - drainedEnergy;
+            energyDamageThisFrame = Mathf.Min(
+                energyDamageThisFrame,
+                remainingEnergyDamage);
+
+            FishermanEnergy -= energyDamageThisFrame;
+            FishermanEnergy = Mathf.Max(FishermanEnergy, 0f);
+            drainedEnergy += energyDamageThisFrame;
+            UpdateFishermanEnergyText();
+
+            yield return null;
         }
     }
 
@@ -358,6 +485,8 @@ public class FishingGameController : MonoBehaviour
             ActionAction != null && ActionAction.WasPressedThisFrame();
         if (actionWasPressed && IsFightingFisherman)
         {
+            StartCoroutine(DrainFishermanEnergyAfterSuccessfulAction());
+
             if (SuccessfulActionSound != null)
             {
                 SoundEffectAudioSource.PlayOneShot(SuccessfulActionSound);
