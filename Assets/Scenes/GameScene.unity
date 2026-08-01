@@ -1310,6 +1310,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FishingGameController
   PlayerBar: {fileID: 1873366467}
   FishermanIcon: {fileID: 1427025622}
+  PlayerBarImage: {fileID: 0}
   StatusText: {fileID: 1327059206}
   EnergyText: {fileID: 1127878504}
   FishermanEnergyText: {fileID: 518393174}
@@ -1328,12 +1329,14 @@ MonoBehaviour:
   MissedActionEnergyLoss: 50
   PlayerEnergyLossPerSecond: 5
   StartingFishermanEnergy: 100
-  FishermanEnergyLossPerSecond: 5
+  FishermanEnergyLossPerSecond: 6
   SuccessfulActionEnergyDamage: 10
   SuccessfulActionDamageDuration: 2
   LeftEnd: {x: -370, y: 144}
   Middle: {x: 0, y: -145}
   RightEnd: {x: 370, y: 144}
+  PlayerBarNearColor: {r: 0.32350263, g: 0.764151, b: 0.17661981, a: 0.78431374}
+  PlayerBarFarColor: {r: 0, g: 0, b: 0, a: 1}
   PlayerMoveSpeed: 0.35
   FishermanMoveSpeed: 0.25
   FishermanReeledInSpeedMultiplier: 0.35
@@ -2457,7 +2460,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &413618307
 RectTransform:
   m_ObjectHideFlags: 0

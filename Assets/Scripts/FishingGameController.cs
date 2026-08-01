@@ -3,11 +3,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class FishingGameController : MonoBehaviour
 {
     [SerializeField] RectTransform PlayerBar;
     [SerializeField] RectTransform FishermanIcon;
+    [SerializeField] Image PlayerBarImage;
     [SerializeField] TextMeshProUGUI StatusText;
     [SerializeField] TextMeshProUGUI EnergyText;
     [SerializeField] TextMeshProUGUI FishermanEnergyText;
@@ -44,6 +46,10 @@ public class FishingGameController : MonoBehaviour
     [SerializeField] Vector2 LeftEnd = new Vector2(-370f, 142f);
     [SerializeField] Vector2 Middle = new Vector2(0f, -145f);
     [SerializeField] Vector2 RightEnd = new Vector2(370f, 142f);
+
+    [Header("Player bar color")]
+    [SerializeField] Color PlayerBarNearColor = new Color();
+    [SerializeField] Color PlayerBarFarColor = new Color();
 
     [Header("Movement")]
     [SerializeField, Min(0f)] float PlayerMoveSpeed = 0.45f;
@@ -96,6 +102,8 @@ public class FishingGameController : MonoBehaviour
         // Start both UI elements at their current positions along the fishing bar.
         StartingPlayerPosition = PositionFromAnchoredX(PlayerBar, 0.5f);
         StartingFishermanPosition = PositionFromAnchoredX(FishermanIcon, 0.5f);
+
+        PlayerBarImage = PlayerBar.GetComponent<Image>();
 
         // Restore the fish that the player selected previously.
         int savedFishIndex = PlayerPrefs.GetInt("SelectedFish", 0);
@@ -174,6 +182,7 @@ public class FishingGameController : MonoBehaviour
             reelInActionIsHeld && wasOverlappingFisherman;
         UpdateFishermanIcon(wasSuccessfullyReeling);
         UpdateFishingBarElementRotations();
+        UpdatePlayerBarColor();
 
         IsFightingFisherman = ReelInBarOverlapsFishermanIcon();
         UpdatePlayerEnergy();
@@ -315,6 +324,7 @@ public class FishingGameController : MonoBehaviour
         SetPositionOnFishingBar(PlayerBar, PlayerPosition);
         SetPositionOnFishingBar(FishermanIcon, FishermanPosition);
         UpdateFishingBarElementRotations();
+        UpdatePlayerBarColor();
         FinishFishermanAction();
     }
 
@@ -403,6 +413,22 @@ public class FishingGameController : MonoBehaviour
             PlayerMoveSpeed * Time.deltaTime);
 
         SetPositionOnFishingBar(PlayerBar, PlayerPosition);
+    }
+
+    private void UpdatePlayerBarColor()
+    {
+        if (PlayerBarImage == null)
+        {
+            return;
+        }
+
+        // The normalized distance is zero together and one at opposite ends.
+        float distanceFromFisherman =
+            Mathf.Abs(PlayerPosition - FishermanPosition);
+        PlayerBarImage.color = Color.Lerp(
+            PlayerBarNearColor,
+            PlayerBarFarColor,
+            distanceFromFisherman);
     }
 
     private void UpdateFishRotation()
