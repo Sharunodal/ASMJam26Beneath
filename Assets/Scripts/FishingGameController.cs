@@ -179,7 +179,9 @@ public class FishingGameController : MonoBehaviour
 
         if (PlayerEnergy <= 0f)
         {
-            ShowGameOver();
+            IsGameOver = true;
+            IsPaused = false;
+            camera_movement_script.game_over_player_lost();
             return;
         }
 
@@ -195,24 +197,6 @@ public class FishingGameController : MonoBehaviour
         {
             SetStatusText("Chase human with mouse button");
         }
-    }
-
-    private void ShowGameOver()
-    {
-        IsGameOver = true;
-        IsPaused = false;
-
-        if (FishingUI != null)
-        {
-            FishingUI.SetActive(false);
-        }
-        if (GameOverScreen != null)
-        {
-            GameOverScreen.SetActive(true);
-        }
-
-        // Stop the rest of the game while the game over screen is visible.
-        Time.timeScale = 0f;
     }
 
     public void StartGame()

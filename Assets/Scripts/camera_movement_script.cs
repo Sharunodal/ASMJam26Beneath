@@ -9,6 +9,8 @@ public class camera_movement_script : MonoBehaviour
     private static float pending_camera_movement = 0.0f;
     private static float fish_pitch_angle = 0.0f;
     private static float show_game_clear_screen_timer = 0.0f;
+    private static float show_game_lost_screen_timer = 0.0f;
+    private static float stop_movement_after_distance = 1000.0f;
 
     static GameObject GetChildByName(string parent, string childName)
     {
@@ -29,6 +31,8 @@ public class camera_movement_script : MonoBehaviour
         pending_camera_movement = 0.0f;
         fish_pitch_angle = 0.0f;
         show_game_clear_screen_timer = 0.0f;
+        show_game_lost_screen_timer = 0.0f;
+        stop_movement_after_distance = 1000.0f;
 
         GameObject.Find("Fisherman").GetComponent<Rigidbody>().isKinematic = true;
         GameObject.Find("fishing_rod").GetComponent<Rigidbody>().isKinematic = true;
@@ -48,6 +52,16 @@ public class camera_movement_script : MonoBehaviour
         GetChildByName("UI", "CaughtAHumanScreen").SetActive(true);
 
         show_game_clear_screen_timer = 5.0f;
+    }
+
+    public static void game_over_player_lost()
+    {
+        // Start fish animation that picks up the fish out from water
+        show_game_lost_screen_timer = 5.0f;
+        GameObject.Find("FishingUI").SetActive(false);
+        GetChildByName("UI", "GotFishedScreen").SetActive(true);
+        ((fishing_rod_twitch)GameObject.Find("fishing_rod").GetComponent(typeof(fishing_rod_twitch))).game_lost();
+        stop_movement_after_distance = 22.0f;
     }
 
     // Update is called once per frame
@@ -75,10 +89,24 @@ public class camera_movement_script : MonoBehaviour
                 GetChildByName("UI", "GameClearScreen").SetActive(true);
             }
         }
+
+        if (show_game_lost_screen_timer > 0.0f)
+        {
+            g = GameObject.Find("player fish model");
+            g.transform.position += new Vector3(0, Time.deltaTime*10.0f, 0);
+            g.transform.localRotation = g.transform.localRotation * Quaternion.AngleAxis(Time.deltaTime * 40.0f, new Vector3(1, 0, 0));
+            show_game_lost_screen_timer -= Time.deltaTime;
+            if (show_game_lost_screen_timer <= 0.0f)
+            {
+                GetChildByName("UI", "GameOverScreen").SetActive(true);
+            }
+        }
     }
 
     static void advance_camera_position(float meters_delta)
     {
+        meters_delta = Mathf.Min(meters_delta, stop_movement_after_distance);
+        stop_movement_after_distance -= meters_delta;
         GameObject g = GameObject.Find("game_camera");
         g.transform.position = new Vector3(0, 0, Mathf.Max(camera_max_pos, g.transform.position.z + -meters_delta));
 
