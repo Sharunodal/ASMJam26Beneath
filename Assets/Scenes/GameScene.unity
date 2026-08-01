@@ -6274,7 +6274,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Fishmanning
+  m_text: Gone Humaning
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3bc2cc8243af1ce41999ea2d968adef4, type: 2}
   m_sharedMaterial: {fileID: 6905243172801316368, guid: 3bc2cc8243af1ce41999ea2d968adef4, type: 2}
