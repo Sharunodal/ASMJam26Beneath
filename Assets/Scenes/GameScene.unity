@@ -2515,7 +2515,7 @@ Transform:
   m_GameObject: {fileID: 493230779}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.99853194, z: -0, w: -0.054165956}
-  m_LocalPosition: {x: -0.039649084, y: -0.13999999, z: 2.2132761}
+  m_LocalPosition: {x: 0.08, y: -0.2, z: 2.14}
   m_LocalScale: {x: 0.010000001, y: 0.01, z: 0.010000001}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -3499,6 +3499,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: player fish model prefab
       objectReference: {fileID: 0}
+    - target: {fileID: 4625978399192877777, guid: c26f90c1e5cd17c4c827ec34ab54d430, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5438402715387809899, guid: c26f90c1e5cd17c4c827ec34ab54d430, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -4362,7 +4366,7 @@ Transform:
   m_GameObject: {fileID: 873659819}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.99853194, z: -0, w: -0.054165956}
-  m_LocalPosition: {x: -0.039649084, y: -0.13999999, z: 2.2132761}
+  m_LocalPosition: {x: 0.17, y: -0.17, z: 2}
   m_LocalScale: {x: 0.010000001, y: 0.01, z: 0.010000001}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -9933,7 +9937,7 @@ Transform:
   m_GameObject: {fileID: 1919756815}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.99853194, z: -0, w: -0.054165956}
-  m_LocalPosition: {x: -0.03964916, y: -0.13999999, z: 2.2132769}
+  m_LocalPosition: {x: 0.05, y: -0.12, z: 2.19}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 1
   m_Children:
