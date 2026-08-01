@@ -56,6 +56,9 @@ public class FishingGameController : MonoBehaviour
     [SerializeField] float FishRotationAtLeftEnd = 45f;
     [SerializeField] float FishRotationAtRightEnd = -45f;
 
+    [Header("Fish selection")]
+    [SerializeField] GameObject[] FishOptions;
+
     private InputAction ActionAction;
     private InputAction ReelInAction;
     private InputAction PauseAction;
@@ -92,6 +95,10 @@ public class FishingGameController : MonoBehaviour
         // Start both UI elements at their current positions along the fishing bar.
         StartingPlayerPosition = PositionFromAnchoredX(PlayerBar, 0.5f);
         StartingFishermanPosition = PositionFromAnchoredX(FishermanIcon, 0.5f);
+
+        // Restore the fish that the player selected previously.
+        int savedFishIndex = PlayerPrefs.GetInt("SelectedFish", 0);
+        SelectFish(savedFishIndex);
 
         ShowMainMenu();
     }
@@ -220,6 +227,32 @@ public class FishingGameController : MonoBehaviour
         SetScreenActive(GameClearScreen, false);
         SetScreenActive(CaughtHumanScreen, false);
         SetScreenActive(FishingUI, true);
+    }
+
+    public void SelectFish(int selectedIndex)
+    {
+        if (FishOptions == null || FishOptions.Length == 0)
+        {
+            return;
+        }
+
+        // Use the first fish if an old saved selection is no longer valid.
+        if (selectedIndex < 0 || selectedIndex >= FishOptions.Length)
+        {
+            selectedIndex = 0;
+        }
+
+        for (int fishIndex = 0; fishIndex < FishOptions.Length; fishIndex++)
+        {
+            if (FishOptions[fishIndex] != null)
+            {
+                bool shouldBeActive = fishIndex == selectedIndex;
+                FishOptions[fishIndex].SetActive(shouldBeActive);
+            }
+        }
+
+        PlayerPrefs.SetInt("SelectedFish", selectedIndex);
+        PlayerPrefs.Save();
     }
 
     private void PauseGame()
