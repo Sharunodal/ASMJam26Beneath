@@ -45,7 +45,12 @@ public class camera_movement_script : MonoBehaviour
     public static void game_over_player_won()
     {
         // Blow up fisherman
-        GameObject.Find("Fisherman").GetComponent<Rigidbody>().isKinematic = false;
+        GameObject f = GameObject.Find("Fisherman");
+        f.transform.SetParent(null);
+        f.GetComponent<Animator>().enabled = false;
+        f.GetComponent<Rigidbody>().isKinematic = false;
+        f.GetComponent<Rigidbody>().AddForce(new Vector3(200.0f,150.0f,-550.0f), ForceMode.Impulse);
+
         GameObject.Find("fishing_rod").GetComponent<Rigidbody>().isKinematic = false;
         GameObject.Find("Fish line").SetActive(false);
         camera_max_pos = GameObject.Find("game_camera").transform.position.z - 22.0f;
