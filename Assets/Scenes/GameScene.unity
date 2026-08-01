@@ -5465,7 +5465,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4589445812447299652, guid: 199b37eed50578243b1992465bae3dec, type: 3}
       propertyPath: m_Name
-      value: fish_03
+      value: player fish model prefab
       objectReference: {fileID: 0}
     - target: {fileID: 4589445812447299652, guid: 199b37eed50578243b1992465bae3dec, type: 3}
       propertyPath: m_IsActive
@@ -9638,7 +9638,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2246323301629900422, guid: 557e962f14678c842b870a1a07d9bdfc, type: 3}
       propertyPath: m_Name
-      value: fish_01
+      value: player fish model prefab
       objectReference: {fileID: 0}
     - target: {fileID: 2246323301629900422, guid: 557e962f14678c842b870a1a07d9bdfc, type: 3}
       propertyPath: m_IsActive

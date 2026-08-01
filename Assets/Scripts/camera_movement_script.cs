@@ -97,6 +97,10 @@ public class camera_movement_script : MonoBehaviour
         advance_camera_position(to_move + constant_camera_movement);
         pending_camera_movement -= to_move;
 
+        if (pending_camera_movement == 0.0f)
+            GameObject.Find("player fish model prefab")?.GetComponent<Animator>()?.SetFloat("swimSpeed", 1.0f);
+
+
         GameObject g = GameObject.Find("fish pitch up/down");
         sign = fish_pitch_angle < 0 ? 1.0f : -1.0f;
         float FishPitchMoveSpeed = fish_pitch_angle < 0 ? FishPitchForwardMoveSpeed : FishPitchBackMoveSpeed;
@@ -182,6 +186,7 @@ public class camera_movement_script : MonoBehaviour
         GameObject.Find("SwooshSound").GetComponent<AudioSource>().Play();
         camera_movement_script.pending_camera_movement += 30.0f;
         fish_pitch_angle -= 25.0f;
+        GameObject.Find("player fish model prefab").GetComponent<Animator>().SetFloat("swimSpeed", 7.5f);
     }
 
     public static void set_fishing_line_rotation()
