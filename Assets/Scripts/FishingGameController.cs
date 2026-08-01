@@ -237,6 +237,7 @@ public class FishingGameController : MonoBehaviour
 
         PlayerPrefs.SetInt("SelectedFish", selectedIndex);
         PlayerPrefs.Save();
+        StartGame();
     }
 
     private void PauseGame()
