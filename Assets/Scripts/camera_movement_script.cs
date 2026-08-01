@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 using System.Collections;
 using System.Linq;
 using UnityEngine.SceneManagement;
@@ -45,7 +46,7 @@ public class camera_movement_script : MonoBehaviour
     const float FishPitchBackMoveSpeed = 40.0f;
     const float FishPitchForwardMoveSpeed = 4.0f;
 
-    public static void game_over_player_won()
+    public static void game_over_player_won(float player_energy, float elapsed_time)
     {
         // Blow up fisherman
         GameObject f = GameObject.Find("Fisherman");
@@ -61,6 +62,8 @@ public class camera_movement_script : MonoBehaviour
         GameObject.Find("Fish line").SetActive(false);
         camera_max_pos = GameObject.Find("game_camera").transform.position.z - 22.0f;
         GetChildByName("UI", "CaughtAHumanScreen").SetActive(true);
+
+        GameObject.Find("CaughtAHumanText").GetComponent<TextMeshProUGUI>().text = $"You Caught a Human!\nLength: {(1.60f+player_energy*4.0f/1000.0f).ToString("f2")} meters\nWeight: {(80.0f+(100.0f-elapsed_time)/2.0f).ToString("f1")} kilograms";
 
         show_game_clear_screen_timer = 5.0f;
 

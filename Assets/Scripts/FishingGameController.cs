@@ -63,6 +63,7 @@ public class FishingGameController : MonoBehaviour
     private InputAction ReelInAction;
     private InputAction PauseAction;
     private AudioSource SoundEffectAudioSource;
+    float PlayStartTime;
     float PlayerPosition;
     float StartingPlayerPosition;
     float FishermanPosition;
@@ -205,6 +206,7 @@ public class FishingGameController : MonoBehaviour
     {
         ResetFishingGame();
         IsGameStarted = true;
+        PlayStartTime = Time.time;
         Time.timeScale = 1f;
 
         SetScreenActive(MainMenuScreen, false);
@@ -500,7 +502,7 @@ public class FishingGameController : MonoBehaviour
 
     private void PlayerWinsGame()
     {
-        camera_movement_script.game_over_player_won();
+        camera_movement_script.game_over_player_won(PlayerEnergy, Time.time - PlayStartTime);
         FishingUI.SetActive(false);
         IsGameOver = true;
         IsGameOverPlayerWon = true;
