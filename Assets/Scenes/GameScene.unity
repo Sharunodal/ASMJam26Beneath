@@ -1272,7 +1272,7 @@ MonoBehaviour:
   StartingEnergy: 100
   MissedActionEnergyLoss: 50
   PlayerEnergyLossPerSecond: 5
-  StartingFishermanEnergy: 0
+  StartingFishermanEnergy: 100
   FishermanEnergyLossPerSecond: 5
   SuccessfulActionEnergyDamage: 10
   SuccessfulActionDamageDuration: 2
